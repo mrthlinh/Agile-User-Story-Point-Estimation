@@ -63,6 +63,28 @@ Among projects, 7 / 16 follow Fibonnaci scale, other 9 did not use any scale. Be
 - Median Absolute Error
 - Standardized Accuracy
 
+## Approach
+
+<!-- Mean Absolute Error:  5.1271836124624
+Median Absolute Error:  2.7
+Mean Squared Error:  98.93675845009025 -->
+
+Mean Absolute Error:  4.355169641701281
+Median Absolute Error:  2.5006497967644896
+Mean Squared Error:  80.21437110450948
+
+Mean Absolute Error:  4.355169641701281
+Median Absolute Error:  2.5006497967644896
+Mean Squared Error:  80.21437110450948
+
+Mean Absolute Error:  4.307588033064078
+Median Absolute Error:  2.4698952283655884
+Mean Squared Error:  78.65750135354794
+
+Mean Absolute Error:  4.951236110767787
+Median Absolute Error:  3.094385015535193
+Mean Squared Error:  97.11308199781521
+
 ## Primitive Result
 
 |Model|Mean Absolute Error|Median Absolute Error|Mean Square Error|
@@ -70,10 +92,19 @@ Among projects, 7 / 16 follow Fibonnaci scale, other 9 did not use any scale. Be
 |Tf-idf + Random Forest|3.96|1.90|82.64|
 |Tf-idf + LightGBM|4.41|2.43|84.59|
 |tf-idf + Catboost -> cannot deal with sprase data type||||
-|Average Word2Vec + Random Forest||||
-|Average Word2Vec + LightGBM||||
-|Average Word2Vec + Catboost||||
-|LSTM end-to-end||||
+|Average Word2Vec 100 + Random Forest|4.95|2.7|94.95|
+|Average Word2Vec 100 + LightGBM|4.42|2.54|82.25|
+|Average Word2Vec 200 + Random Forest|5.13|2.7|98.94|
+|Average Word2Vec 200 + LightGBM|4.38|2.48|81.21|
+|Average Word2Vec 300 + LightGBM|4.35|2.50|80.21|
+|Average Word2Vec 400 + LightGBM|4.31|2.46|78.66|
+|Average Word2Vec 400 + Catboost|4.73|3.16|90.31|
+|Doc2Vec 100 + Random Forest|5.88|3.4|119.06|
+|Doc2Vec 100 + LightGBM|4.84|3.05|97.44|
+|LSTM end-to-end 50 unit tf.nn.rnn_cell.LSTMCell|3.97|N/A|92.07|
+|LSTM end-to-end 50 unit, 100 embeddingsize tf.nn.rnn_cell.LSTMCell|3.98|N/A|90.51|
+|LSTM end-to-end 100 unit tf.nn.rnn_cell.BasicLSTMCell|4.46|N/A|84.78|
+|LSTM end-to-end 200 unit tf.nn.rnn_cell.LSTMCell|5.09|N/A|86.27|
 |Average LSTM + Random Forest ||||
 |Average LSTM + LightGBM ||||
 |Average LSTM + Catboost ||||
