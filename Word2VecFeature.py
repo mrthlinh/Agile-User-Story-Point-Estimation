@@ -15,7 +15,7 @@ import pandas as pd
 path = get_tmpfile("word2vec.model")
 corpus = pd.read_hdf('helper/corpus_hdf', key='abc', mode='r')
 
-model = Word2Vec(corpus, size=100, window=5, min_count=1, workers=4)
+model = Word2Vec(corpus, size=400, window=3, min_count=1, workers=4)
 model.train(corpus,len(corpus),epochs = 10)
 
 model.save("helper/word2vec.model")

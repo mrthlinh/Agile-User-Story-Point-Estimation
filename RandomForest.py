@@ -15,7 +15,12 @@ from sklearn.metrics import mean_squared_error,mean_absolute_error,median_absolu
 
 data_csv = pd.read_csv("data_csv/data")
 
-x = sparse.load_npz("features/tf_idf_matrix.npz")
+#x = sparse.load_npz("features/tf_idf_matrix.npz")
+
+x = pd.read_csv("features/word2vec_ave.csv",index_col=0)
+
+#x = pd.read_csv("features/doc2vec.csv",index_col=0)
+
 y = data_csv.point
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random_state=42)
 
@@ -24,8 +29,8 @@ rf.fit(x_train,y_train)
 
 y_pred = rf.predict(x_test)
 
-print("Mean Squared Error: ",mean_squared_error(y_pred,y_test))
+
 print("Mean Absolute Error: ",mean_absolute_error(y_pred,y_test))
 print("Median Absolute Error: ",median_absolute_error(y_pred,y_test))
-
+print("Mean Squared Error: ",mean_squared_error(y_pred,y_test))
 
