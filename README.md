@@ -65,25 +65,6 @@ Among projects, 7 / 16 follow Fibonnaci scale, other 9 did not use any scale. Be
 
 ## Approach
 
-<!-- Mean Absolute Error:  5.1271836124624
-Median Absolute Error:  2.7
-Mean Squared Error:  98.93675845009025 -->
-
-Mean Absolute Error:  4.355169641701281
-Median Absolute Error:  2.5006497967644896
-Mean Squared Error:  80.21437110450948
-
-Mean Absolute Error:  4.355169641701281
-Median Absolute Error:  2.5006497967644896
-Mean Squared Error:  80.21437110450948
-
-Mean Absolute Error:  4.307588033064078
-Median Absolute Error:  2.4698952283655884
-Mean Squared Error:  78.65750135354794
-
-Mean Absolute Error:  4.951236110767787
-Median Absolute Error:  3.094385015535193
-Mean Squared Error:  97.11308199781521
 
 ## Primitive Result
 
@@ -110,3 +91,7 @@ Mean Squared Error:  97.11308199781521
 |Average LSTM + Catboost ||||
 |Average LSTM + Ensemble ||||
 |Average LSTM + Recurrent Highway Network __(from paper)__ ||||
+
+# Reference
+1. http://deeplearning.net/tutorial/lstm.html
+2. [How to Develop Convolutional Neural Network Models for Time Series Forecasting](https://machinelearningmastery.com/how-to-develop-convolutional-neural-network-models-for-time-series-forecasting/?utm_campaign=Learning%20Posts&utm_content=80012867&utm_medium=social&utm_source=linkedin)
