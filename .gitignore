@@ -2,3 +2,5 @@ __pycache__
 .spyproject
 datasets-master
 dataset
+catboost_info
+models
