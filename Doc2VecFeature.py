@@ -9,28 +9,64 @@ Created on Fri Nov 16 16:20:21 2018
 from gensim.test.utils import common_texts,get_tmpfile
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 import pandas as pd
-
-
-path = get_tmpfile("my_doc2vec_model")
-corpus = pd.read_hdf('helper/corpus_hdf', key='abc', mode='r')
+from multiprocessing import Pool
 
 def list2str(row):
     out_str = ""
     for i in row:
         out_str += " "+ i 
     return out_str
+
+def Doc2VecFeature(embedding_size = 200):
+    corpus = pd.read_hdf('helper/corpus_hdf', key='abc', mode='r')
+    corpus['concat'] = corpus['concat'].apply(lambda x: list2str(x))
     
-corpus = corpus.apply(lambda x: list2str(x))
+    #Drop project columns
+    corpus_ = corpus['concat']
 
-documents = [TaggedDocument(doc, [i]) for i, doc in enumerate(corpus.values)]
+    documents = [TaggedDocument(doc, [i]) for i, doc in enumerate(corpus_.values)]
 
-#model = Doc2Vec(corpus, vector_size=100, window=5, min_count=1, workers=4)
+    #model = Doc2Vec(corpus, vector_size=100, window=5, min_count=1, workers=4)
+    model = Doc2Vec(documents, vector_size=embedding_size, min_count=1, workers=4)    
+    model.save("helper/doc2vec_"+str(embedding_size)+".model")
+    
+    features = [model.docvecs[i] for i in range(len(documents))]
 
-model = Doc2Vec(documents, vector_size=200, min_count=1, workers=4)
+    columns = ['feature'+str(i) for i in range(model.vector_size)]
+    df_doc2vec = pd.DataFrame.from_records(features,columns=columns)
+    df_doc2vec = df_doc2vec.join(corpus['project'])
+    
+#    a = df_doc2vec.join(corpus['project'])
+    
+    print("Check Null")
+    assert(df_doc2vec.isnull().any().any() == False)
+    
+    df_doc2vec.to_csv("features/doc2vec_"+str(embedding_size)+".csv")
+
+
+def main():
+    embedding_size = [10,50,100,300,500,1000,2000]
+#    embedding_size = [10,50]
+    proc = 16
+    print("Extracture Features")
+    with Pool(proc) as p:
+    #    length = len(embedding_size)
+        feature = p.map(Doc2VecFeature, embedding_size)
+
+    
+if __name__ == "__main__":
+    main()
+    
+
+#path = get_tmpfile("my_doc2vec_model")
+
+
+
+    
+
 
 #model.train(corpus,len(corpus),epochs = 10)
 
-model.save("helper/doc2vec.model")
 
 #    model = gensim.models.Word2Vec(
 #        documents,
@@ -40,11 +76,7 @@ model.save("helper/doc2vec.model")
 #        workers=10)
 #    model.train(documents, total_examples=len(documents), epochs=10)
 
-features = [model.docvecs[i] for i in range(len(documents))]
 
-columns = ['feature'+str(i) for i in range(model.vector_size)]
-df_doc2vec = pd.DataFrame.from_records(features,columns=columns)
-df_doc2vec.to_csv("features/doc2vec.csv")
 
 #model.wv.most_similar(['ios'],topn=10)
 #[('ios8', 0.7491174936294556),
