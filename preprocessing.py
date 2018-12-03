@@ -61,14 +61,14 @@ if __name__ == "__main__":
         lmtzr = pickle.load(f)
     
     # Concatinate title and user_story
-    pd_data['concat'] = pd_data.apply(lambda x: x[1] + x[2],axis=1)
+    pd_data['concat'] = pd_data.apply(lambda x: x[1] + ". " + x[2],axis=1)
     
     corpus = pd_data['concat']
     # Save CSV file for later use
     pd_data.to_csv("data_csv/data",index=False)
     
 #    vectorizer = CountVectorizer(stop_words='english',strip_accents="ascii")
-    vectorizer = TfidfVectorizer(stop_words='english',strip_accents="ascii")
+    vectorizer = TfidfVectorizer(stop_words='english',strip_accents="ascii",lowercase=False)
     vectorizer.fit(corpus)
      
     # TF_IDF features
@@ -93,6 +93,13 @@ if __name__ == "__main__":
     analyzer = vectorizer.build_analyzer()    
     dictionary = vectorizer.vocabulary_
     
+    length = len(dictionary)
+    reverse_dictionary = {k+3:v for v,k in dictionary.items()}
+    reverse_dictionary[0] = '<PAD>'
+    reverse_dictionary[1] = '<START>'
+    reverse_dictionary[2] = '<OOV>'
+    dictionary = {k:v for v,k in reverse_dictionary.items()}
+    
     # Save dictionary
     with open('helper/dictionary.pickle', 'wb') as f:
         # The protocol version used is detected automatically, so we do not
@@ -112,7 +119,11 @@ if __name__ == "__main__":
     
     # Expand Contraction
     corpus = corpus.apply(lambda x: [expand_contractions(i,CONTRACTION_MAP) for i in x])
+     
+    corpus = corpus.to_frame()
+    corpus['project'] = pd_data['project']
     
+    # Convert to     
     corpus.to_hdf('helper/corpus_hdf',key='abc')
     
     
