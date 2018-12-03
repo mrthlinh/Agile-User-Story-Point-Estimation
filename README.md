@@ -65,6 +65,8 @@ Among projects, 7 / 16 follow Fibonnaci scale, other 9 did not use any scale. Be
 
 ## Approach
 
+1. How size of embedding affect performance in Word2Vec?
+2.
 
 ## Primitive Result
 
@@ -95,3 +97,10 @@ Among projects, 7 / 16 follow Fibonnaci scale, other 9 did not use any scale. Be
 # Reference
 1. http://deeplearning.net/tutorial/lstm.html
 2. [How to Develop Convolutional Neural Network Models for Time Series Forecasting](https://machinelearningmastery.com/how-to-develop-convolutional-neural-network-models-for-time-series-forecasting/?utm_campaign=Learning%20Posts&utm_content=80012867&utm_medium=social&utm_source=linkedin)
+3. [RNN in TF - A practical guide and undocumented features -> very good](http://www.wildml.com/2016/08/rnns-in-tensorflow-a-practical-guide-and-undocumented-features/)
+
+https://jasdeep06.github.io/posts/Understanding-LSTM-in-Tensorflow-MNIST/
+
+https://machinelearningmastery.com/return-sequences-and-return-states-for-lstms-in-keras/
+
+https://www.tensorflow.org/tutorials/sequences/recurrent
