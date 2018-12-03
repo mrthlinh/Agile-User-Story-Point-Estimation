@@ -13,24 +13,53 @@ from sklearn.model_selection import train_test_split
 from scipy import sparse
 from sklearn.metrics import mean_squared_error,mean_absolute_error,median_absolute_error
 
-data_csv = pd.read_csv("data_csv/data")
-
-#x = sparse.load_npz("features/tf_idf_matrix.npz")
-
-x = pd.read_csv("features/word2vec_ave.csv",index_col=0)
-
-#x = pd.read_csv("features/doc2vec.csv",index_col=0)
-
-y = data_csv.point
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random_state=42)
-
-rf = RandomForestRegressor()
-rf.fit(x_train,y_train)
-
-y_pred = rf.predict(x_test)
+from helper import split_data
 
 
-print("Mean Absolute Error: ",mean_absolute_error(y_pred,y_test))
-print("Median Absolute Error: ",median_absolute_error(y_pred,y_test))
-print("Mean Squared Error: ",mean_squared_error(y_pred,y_test))
 
+def RandomForestmodel(size,x):
+    data_csv = pd.read_csv("data_csv/data",low_memory=False)
+    
+    #x = sparse.load_npz("features/tf_idf_matrix.npz")
+    
+#    x = pd.read_csv("features/word2vec_ave_"+str(size)+".csv",index_col=0,low_memory=False)
+    
+    #x = pd.read_csv("features/doc2vec.csv",index_col=0)
+    
+    y = data_csv.point
+    
+    x_train, x_test, y_train, y_test = split_data(x, y, ratio=0.2)
+    
+    #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random_state=42)
+    
+    rf = RandomForestRegressor(random_state = 99)
+    rf.fit(x_train.iloc[:,:-1],y_train)
+    
+    y_pred = rf.predict(x_test.iloc[:,:-1])
+    
+    result_total = dict()
+    result_total['MSE'] = mean_squared_error(y_pred,y_test)
+    result_total['MAE'] = mean_absolute_error(y_pred,y_test)
+    result_total['MdAE']= median_absolute_error(y_pred,y_test)
+    
+    print("Mean Absolute Error: ",mean_absolute_error(y_pred,y_test))
+    print("Median Absolute Error: ",median_absolute_error(y_pred,y_test))
+    print("Mean Squared Error: ",mean_squared_error(y_pred,y_test))
+    
+    print("Evaluation on each project")
+    tmp = pd.DataFrame()
+    tmp['project'] = x_test['project']
+    tmp['pred'] = y_pred
+    tmp['truth'] = y_test
+    
+    result_each = tmp.groupby(by='project').apply(lambda col: mean_squared_error(col.pred,col.truth)).to_frame(name='MSE')
+    result_each['MAE'] = tmp.groupby(by='project').apply(lambda col: mean_absolute_error(col.pred,col.truth))
+    result_each['MdAE'] = tmp.groupby(by='project').apply(lambda col: median_absolute_error(col.pred,col.truth))
+    
+    return (result_each,result_total)
+
+def main():
+    RandomForestmodel()
+    
+if __name__ == "__main__":
+    main()
