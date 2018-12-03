@@ -65,6 +65,7 @@ After that we can could use a regressor to estimate story point, some ideas coul
 ![](pic/process.png)
 
 __LSTM architecture__
+
 |||
 |:--:|:--:|
 |![](pic/LSTM.png)|![](pic/LSTM_average.png)|
