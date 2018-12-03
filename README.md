@@ -2,33 +2,23 @@
 
 ## Table of contents
 1. [Introduction](#introduction)
-2. [Propose Solution](#propose-solution)
-3. [Data](#data)
+2. [Data](#data)
+3. [Approach](#approach)
 4. [Evaluation](#evaluation)
-
+5. [Primitive Results](#primitive-results)
+6. [Reference](#reference)
 ## Introduction
 
 Effort estimation is an important part of software project management. Cost and schedule overruns create more risk for software projects. Effort estimations can benefit project manager and clients to make sure that projects can complete in time.
 
 In modern Agile development, software is developed through repeated cycles (iterations). A project has a number of iterations. An iteration is usually a short (usually 2–4 weeks) period in which the development team designs, implements, tests and delivers a distinct product increment, e.g. a working milestone version or a working release. Each iteration requires the completion of a number of user stories, which are a common way for agile teams to express user requirements.
 
+![](pic/agile.png)
+
 Therefore, there is a need to focus on estimating the effort of completing single user story rather than entire project. In fact, it is very common for agile teams to go through each user story estimate the effort required to completing it.
 
 Currently, most agile teams heavily reply on experts' subjective assessment to estimate time. This may be bias and inaccuracy and inconsistent between estimates.
-
-## Propose Solution
-
-We would propose an end-to-end solution to estimate story point (number) based on user story (text).
-
-
-- Input: User story (Title + description) of issues
-- Output: story-point estimation
-
-End-to-end approach, without worrying about manual features.
-
-In order to do it, we would find a way to represent user story (Text to Vector), there are several ways to do it for example Doc2Vec model, LSTM, CNN or TF-IDF.
-
-After that we can could use a regressor to estimate story point, some ideas could be Neural Network, Recurrent Highway Network, Gradient Boosting Tree.
+![](pic/effort.png)
 
 ## Data
 
@@ -57,18 +47,45 @@ Features:
 
 Among projects, 7 / 16 follow Fibonnaci scale, other 9 did not use any scale. Because of this reason, the authors did not round their estimation to nearest estimation on Fibonacci scale. This makes their approach applicable for wider range of projects.
 
+## Approach
+
+We would propose an end-to-end solution to estimate story point (number) based on user story (text).
+
+
+- Input: User story (Title + description) of issues
+- Output: story-point estimation
+
+End-to-end approach, without worrying about manual features.
+
+In order to do it, we would find a way to represent user story (Text to Vector), there are several ways to do it for example Doc2Vec model, LSTM, CNN or TF-IDF.
+
+After that we can could use a regressor to estimate story point, some ideas could be Neural Network, Recurrent Highway Network, Gradient Boosting Tree.
+
+![](pic/process.png)
+
+__LSTM architecture__
+|||
+|:--:|:--:|
+|![](pic/LSTM.png)|![](pic/LSTM_average.png)|
+
 ## Evaluation
 
 - Mean Absolute Error
 - Median Absolute Error
 - Standardized Accuracy
 
-## Approach
-
-1. How size of embedding affect performance in Word2Vec?
-2.
 
 ## Primitive Result
+
+1. Word2Vec
+![](pic/result_word2vec.png)
+2. How embedding size affect Result
+
+||||
+|:--:|:--:|:--:|
+|![](pic/word2vec_ave.png)|![](pic/doc2vec.png)|![](pic/LSTM_size.png)|
+
+3. Result
 
 |Model|Mean Absolute Error|Median Absolute Error|Mean Square Error|
 |:---:|:--:|:--:|:--:|
