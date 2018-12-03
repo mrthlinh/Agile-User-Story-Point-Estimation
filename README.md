@@ -6,6 +6,7 @@
 3. [Approach](#approach)
 4. [Evaluation](#evaluation)
 5. [Primitive Results](#primitive-results)
+6. [How to run](#how-to-run)
 6. [Reference](#reference)
 ## Introduction
 
@@ -109,7 +110,8 @@ __LSTM architecture__
 |Average LSTM + LightGBM ||||
 |Average LSTM + Catboost ||||
 |Average LSTM + Ensemble ||||
-|Average LSTM + Recurrent Highway Network __(from paper)__ ||||
+
+# How To Run
 
 # Reference
 1. http://deeplearning.net/tutorial/lstm.html
