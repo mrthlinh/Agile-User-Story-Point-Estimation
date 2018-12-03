@@ -28,6 +28,9 @@ parser.add_argument('--model_dir', default= './models/ckpt/', type=str, help='Di
 parser.add_argument('--saved_dir', default='./models/pb/', type=str, help='Dir to save a model for TF serving')
 parser.add_argument('--step_size', default=10, type=int, help='Step size')
 parser.add_argument('--batch_size', default=100, type=int, help='Batch size')
+parser.add_argument('--embedding_size', default=100, type=int, help='Embedding size')
+parser.add_argument('--rnn_layers', default=2, type=int, help='RNN layer size')
+parser.add_argument('--rnn_units', default=50, type=int, help='RNN layer size')
 args = parser.parse_args()
 
 
@@ -44,7 +47,7 @@ data = prepareData()
 #data.preProcessing()
 
 vocab_size = data.vocab_size
-embedding_size = 100
+embedding_size = args.embedding_size
 sentence_size = data.sentence_size
 
 # Prepare data
@@ -71,22 +74,38 @@ def LSTM_model_fn(features, labels, mode):
             initializer=tf.random_uniform_initializer(-1.0,-1.0))
     
     # create an LSTM cell of size 100
-#    lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(num_units = 100)
-    lstm_cell = tf.nn.rnn_cell.LSTMCell(num_units = 100)
-    # Multi 
-#    num_units = [args.batch_size, 64]
+
+#    lstm_cell = tf.nn.rnn_cell.LSTMCell(num_units = 100)
+
     
- 
+    layers = args.rnn_layers
+    rnn_size = args.rnn_units
+    
+    def lstm_cell():
+        # LSTM cell
+        lstm = tf.contrib.rnn.BasicLSTMCell(rnn_size, forget_bias=1.0)
+        # Add Dropout Layer
+        lstm = tf.nn.rnn_cell.DropoutWrapper(lstm, output_keep_prob=0.2)
+        return lstm
+    
+    deep_lstm_cell = tf.contrib.rnn.MultiRNNCell([lstm_cell() for _ in range(layers)])
+    
     # Getting sequence length from features sucks -> initialize sequence length here
     sequence_length = tf.count_nonzero(features['x'], 1)
     
     # create the complete LSTM
     embedding, final_states = tf.nn.dynamic_rnn(
-        lstm_cell, inputs, sequence_length = sequence_length, dtype=tf.float32)
+        deep_lstm_cell, inputs, sequence_length = sequence_length, dtype=tf.float32)
+
+#    embedding, final_states = tf.nn.dynamic_rnn(
+#        lstm_cell, inputs, sequence_length = sequence_length, dtype=tf.float32)
+    
+#    outputs = final_states[-1].h   
     
     # Reshape
     embedding_reshape = tf.expand_dims(embedding, 0)
     embedding_reshape = tf.expand_dims(embedding_reshape, 0)
+    
 #    embedding_reshape = tf.reshape(embedding, [1,1,tf.shape(labels),sentence_size,embedding_size]) 
     
     # Average Pooling
@@ -221,13 +240,14 @@ def main(unused_argv):
     
     # Set up logging for predictions
     # Log the values in the "Softmax" tensor with label "probabilities"
-    tensors_to_log = {"predicted_points": "predicted_points"}
-    logging_hook = tf.train.LoggingTensorHook(tensors=tensors_to_log, every_n_iter=50)
+#    tensors_to_log = {"predicted_points": "predicted_points"}
+#    logging_hook = tf.train.LoggingTensorHook(tensors=tensors_to_log, every_n_iter=50)
         
     RNN_classifier.train(
         input_fn=lambda: train_input_fn(x_train,y_train,batch_size=args.batch_size),
-        steps=args.step_size,
-        hooks=[logging_hook])  
+        steps=args.step_size)
+    
+    
 
 #    RNN_classifier.train(
 #        input_fn=lambda: train_input_fn(x_train,y_train,batch_size=args.batch_size),
