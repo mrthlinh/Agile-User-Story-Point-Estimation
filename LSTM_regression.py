@@ -28,6 +28,9 @@ parser.add_argument('--model_dir', default= './models/ckpt/', type=str, help='Di
 parser.add_argument('--saved_dir', default='./models/pb/', type=str, help='Dir to save a model for TF serving')
 parser.add_argument('--step_size', default=10, type=int, help='Step size')
 parser.add_argument('--batch_size', default=100, type=int, help='Batch size')
+parser.add_argument('--embedding_size', default=100, type=int, help='Embedding size')
+parser.add_argument('--rnn_layers', default=2, type=int, help='RNN layer size')
+parser.add_argument('--rnn_units', default=50, type=int, help='RNN layer size')
 args = parser.parse_args()
 
 
@@ -44,7 +47,7 @@ data = prepareData()
 #data.preProcessing()
 
 vocab_size = data.vocab_size
-embedding_size = 100
+embedding_size = args.embedding_size
 sentence_size = data.sentence_size
 
 # Prepare data
@@ -71,10 +74,25 @@ def LSTM_model_fn(features, labels, mode):
             initializer=tf.random_uniform_initializer(-1.0,-1.0))
     
     # create an LSTM cell of size 100
-#    lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(num_units = 100)
-    lstm_cell = tf.nn.rnn_cell.LSTMCell(num_units = 50)
-    # Multi 
-#    num_units = [args.batch_size, 64]
+#    lstm_cell = tf.nn.rnn_cell.LSTMCell(num_units = 50)
+    
+
+    
+    # Deep LSTM
+    layers = args.rnn_layers
+    rnn_size = args.rnn_units
+    
+    def lstm_cell():
+        # LSTM cell
+#        lstm = tf.contrib.rnn.BasicLSTMCell(rnn_size, forget_bias=1.0)
+#        lstm = tf.nn.rnn_cell.LSTMCell(rnn_size)        
+        lstm  = tf.nn.rnn_cell.GRUCell(rnn_size)
+
+        # Add Dropout Layer
+        lstm = tf.nn.rnn_cell.DropoutWrapper(lstm, output_keep_prob=0.2)
+        return lstm
+      
+    deep_lstm_cell = tf.contrib.rnn.MultiRNNCell([lstm_cell() for _ in range(layers)])
     
  
     # Getting sequence length from features sucks -> initialize sequence length here
@@ -82,15 +100,23 @@ def LSTM_model_fn(features, labels, mode):
     
     # create the complete LSTM
     _, final_states = tf.nn.dynamic_rnn(
-        lstm_cell, inputs, sequence_length = sequence_length, dtype=tf.float32)
+        deep_lstm_cell, inputs, sequence_length = sequence_length, dtype=tf.float32)
+    
+
+#    _, final_states = tf.nn.dynamic_rnn(
+#        Deep_cell, inputs, sequence_length = sequence_length, dtype=tf.float32)
     
     # get the final hidden states of dimensionality [batch_size x sentence_size]  [batch_size, lstm_units]
     # the last state for each element in the batch is final_states.h
-    outputs = final_states.h   
+    
+#    outputs = final_states[-1].h   
+    outputs = final_states[-1]
     
     # Fully Connected Layer
-    num_unit = 1
-    out_points = tf.layers.dense(inputs=outputs, units=num_unit, name = "predicted_points")
+    
+    num_unit = [rnn_size/2,1]
+    out_points = tf.layers.dense(inputs=outputs, units=num_unit[0])
+    out_points = tf.layers.dense(inputs=out_points, units=num_unit[1])
     
     if labels is not None:
         labels = tf.reshape(labels, [-1, 1])
