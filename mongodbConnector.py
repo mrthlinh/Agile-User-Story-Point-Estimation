@@ -88,40 +88,5 @@ def eval_input_fn():
 def tolowerCase():
     pass
 
-#def preProcessing(self):
-#    '''
-#        Description: 
-#            - Load data
-#            - Convert from text to index
-#            - 0 post-padding 
-#        Usage:
-#    '''
-#    
-##        sentence_size = 200
-##    embedding_size = 50
-#
-#    
-#    # we assign the first indices in the vocabulary to special tokens that we use
-#    # for padding, as start token, and for indicating unknown words
-#    
-#    pad_id = 0
-#
-#         
-#    print("Pad sequences (samples x time)")
-#    self.x_train = sequence.pad_sequences(self.x_train_variable, 
-#                                     maxlen=self.sentence_size,
-#                                     truncating='post',
-#                                     padding='post',
-#                                     value=pad_id)
-#    self.x_test = sequence.pad_sequences(self.x_test_variable, 
-#                                    maxlen=self.sentence_size,
-#                                    truncating='post',
-#                                    padding='post', 
-#                                    value=pad_id)
-#    
-#    print("x_train shape:", self.x_train.shape)
-#    print("x_test shape:", self.x_test.shape)
-#    
-
 
     
