@@ -77,7 +77,7 @@ __LSTM architecture__
 - Standardized Accuracy
 
 
-## Primitive Result
+## Results
 
 1. Word2Vec
 ![](pic/result_word2vec.png)
@@ -107,20 +107,87 @@ __LSTM architecture__
 |LSTM end-to-end 50 unit, 100 embeddingsize tf.nn.rnn_cell.LSTMCell|3.98|N/A|90.51|
 |LSTM end-to-end 100 unit tf.nn.rnn_cell.BasicLSTMCell|4.46|N/A|84.78|
 |LSTM end-to-end 200 unit tf.nn.rnn_cell.LSTMCell|5.09|N/A|86.27|
-|Average LSTM + Random Forest ||||
-|Average LSTM + LightGBM ||||
-|Average LSTM + Catboost ||||
-|Average LSTM + Ensemble ||||
 
-# How To Run
+## Improvements
+
+## How To Run
+1. MongoDB
+- Create database and collections in MongoDB (no password)
+```
+use mydb
+db.createCollection("storypoint")
+```
+- From command line
+```
+bash importCSV.sh
+```
+
+2. Install Library
+```
+bash install_libary.sh
+```
+
+3. Preprocessing
+```
+python preprocessing.py
+```
+
+4. Building Word2Vec features
+
+This is a multi-processing program to boost speed
+```
+(default setting) python Word2VecFeatures.py
+(proc setting) python Word2VecFeatures.py --proc 8
+
+Arguments
+- proc is number of processor, please set it an even number
+```
+
+5. Building Doc2Vec features
+
+This is a multi-processing program to boost speed
+```
+(default setting) python Word2VecFeatures.py
+(proc setting) python Doc2VecFeatures.py --proc 8
+
+Arguments
+- proc is number of processor, please set it an even number
+```
+
+6. Random Forest, LightGBM and Catboost Models
+
+```
+python RandomForest.py --size 100 --feature_name word2vec_Ave
+python lightGBM.py --size 100 --feature_name word2vec_Ave
+python catb.py --size 100 --feature_name word2vec_Ave
+
+Arguments
+- size: embedding size
+- feature_name: word2vec_ave or doc2vec
+```
+
+7. LSTM models
+```
+python LSTM_regression.py
+python LSTM_regression.py --rnn_layers 2 --rnn_units 100 --embedding_size 100
+
+Arguments
+- batch_size: size of training batch
+- embedding_size: size of embedding words
+- rnn_layers: How many layers you want to stack
+- rnn_units: How many nodes in a layer
+
+Erros:
+- terminate called after throwing an instance of 'std::bad_alloc'
+You need more RAMs
+```
+__Note:__ To re-train the model please delete folder "models"
+
 
 # Reference
 1. http://deeplearning.net/tutorial/lstm.html
 2. [How to Develop Convolutional Neural Network Models for Time Series Forecasting](https://machinelearningmastery.com/how-to-develop-convolutional-neural-network-models-for-time-series-forecasting/?utm_campaign=Learning%20Posts&utm_content=80012867&utm_medium=social&utm_source=linkedin)
 3. [RNN in TF - A practical guide and undocumented features -> very good](http://www.wildml.com/2016/08/rnns-in-tensorflow-a-practical-guide-and-undocumented-features/)
-
-https://jasdeep06.github.io/posts/Understanding-LSTM-in-Tensorflow-MNIST/
-
-https://machinelearningmastery.com/return-sequences-and-return-states-for-lstms-in-keras/
-
-https://www.tensorflow.org/tutorials/sequences/recurrent
+4. https://jasdeep06.github.io/posts/Understanding-LSTM-in-Tensorflow-MNIST/
+5. https://machinelearningmastery.com/return-sequences-and-return-states-for-lstms-in-keras/
+6. https://www.tensorflow.org/tutorials/sequences/recurrent
