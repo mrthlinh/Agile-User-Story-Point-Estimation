@@ -11,6 +11,18 @@ from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 import pandas as pd
 from multiprocessing import Pool
 
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--proc', default='8', type=str, help='Number of proccessor') 
+args = parser.parse_args()
+proc = int(args.proc)
+
+print("================== Doc2Vec Feature Extraction ============================")
+print(parser.print_help())
+print("==========================================================================")
+
+
 def list2str(row):
     out_str = ""
     for i in row:
@@ -45,9 +57,10 @@ def Doc2VecFeature(embedding_size = 200):
 
 
 def main():
-    embedding_size = [10,50,100,300,500,1000,2000]
-#    embedding_size = [10,50]
-    proc = 16
+#    embedding_size = [10,50,100,300,500,1000,2000]
+    embedding_size = [100,300]
+    print("Embedding Size: ",embedding_size)
+#    proc = 16
     print("Extracture Features")
     with Pool(proc) as p:
     #    length = len(embedding_size)
