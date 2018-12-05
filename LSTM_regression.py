@@ -13,6 +13,8 @@ from __future__ import print_function
 import tensorflow as tf
 tf.enable_eager_execution()
 
+
+
 #from movieReviewData import movieReviewData
 from prepareData import prepareData
 import argparse
@@ -85,8 +87,8 @@ def LSTM_model_fn(features, labels, mode):
     def lstm_cell():
         # LSTM cell
 #        lstm = tf.contrib.rnn.BasicLSTMCell(rnn_size, forget_bias=1.0)
-#        lstm = tf.nn.rnn_cell.LSTMCell(rnn_size)        
-        lstm  = tf.nn.rnn_cell.GRUCell(rnn_size)
+        lstm = tf.nn.rnn_cell.LSTMCell(rnn_size)        
+#        lstm  = tf.nn.rnn_cell.GRUCell(rnn_size)
 
         # Add Dropout Layer
         lstm = tf.nn.rnn_cell.DropoutWrapper(lstm, output_keep_prob=0.2)
@@ -110,7 +112,7 @@ def LSTM_model_fn(features, labels, mode):
     # the last state for each element in the batch is final_states.h
     
 #    outputs = final_states[-1].h   
-    outputs = final_states[-1]
+    outputs = final_states[-1].h
     
     # Fully Connected Layer
     
