@@ -15,7 +15,19 @@ from sklearn.metrics import mean_squared_error,mean_absolute_error,median_absolu
 
 from helper import split_data
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--size', default='100', type=str, help='Size of embedding') 
+parser.add_argument('--feature_name', default='word2vec_ave', type=str, help='Feature Name word2vec_ave or doc2vec') 
+args = parser.parse_args()
+feature_name = args.feature_name
 
+size = int(args.size)
+x = pd.read_csv("features/"+feature_name+"_"+str(size)+".csv",index_col=0,low_memory=False)
+
+print("================== Random Forest Regressor ===============================")
+print(parser.print_help())
+print("==========================================================================")
 
 def RandomForestmodel(size,x):
     data_csv = pd.read_csv("data_csv/data",low_memory=False)
@@ -59,7 +71,7 @@ def RandomForestmodel(size,x):
     return (result_each,result_total)
 
 def main():
-    RandomForestmodel()
+    RandomForestmodel(size,x)
     
 if __name__ == "__main__":
     main()

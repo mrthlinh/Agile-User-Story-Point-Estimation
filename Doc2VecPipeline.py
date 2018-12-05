@@ -24,7 +24,9 @@ model_name = args.model_name
 proc = int(args.proc)
 
 print("Set the embedding size")
-embedding_size = [10,50,100,300,500,1000,2000]
+#embedding_size = [10,50,100,300,500,1000,2000]
+embedding_size = [10,50,100,300]
+print("Embedding Size: ",embedding_size)
 #embedding_size = [10,50]
 
 print("Check embedding file existence")

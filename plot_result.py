@@ -10,8 +10,8 @@ import pickle
 
 model_list = ["CB","LGBM","RF"]
 
-#feature_name = 'doc2vec'
-feature_name = 'word2vec'
+feature_name = 'doc2vec'
+#feature_name = 'word2vec'
 
 embedding_size = [10,50,100,300,500,1000,2000]
 

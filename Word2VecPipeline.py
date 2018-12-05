@@ -23,9 +23,14 @@ args = parser.parse_args()
 model_name = args.model_name
 proc = int(args.proc)
 
-print("Set the embedding size")
-embedding_size = [10,50,100,300,500,1000,2000]
 
+print("Set the embedding size")
+
+
+#embedding_size = [10,50,100,300,500,1000,2000]
+
+embedding_size = [10,50,100,300]
+print("Embedding Size: ",embedding_size)
 print("Check embedding file existence")
 file_list = set(['features/word2vec_ave_'+str(i)+'.csv' for i in embedding_size])
 csv_list = set(glob.glob("features/*.csv"))
